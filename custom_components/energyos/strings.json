@@ -5,19 +5,27 @@
         "title": "EnergyOS sensor setup",
         "description": "Verify detected source sensors before saving. Suggested roles: {autodetected}",
         "data": {
-          "pv": "PV power",
-          "grid": "Grid signed power",
+          "pv": "Single PV total power (alternative; do not select together with both PVs)",
+          "grid": "Signed grid power (alternative: positive import, negative export)",
           "battery": "Battery signed power",
           "soc": "Battery state of charge",
-          "load": "House load",
+          "load": "Optional independently measured house load (do not use estimates)",
           "ev": "EV charging power",
           "invert_grid": "Invert grid sign",
-          "invert_battery": "Invert battery sign"
+          "invert_battery": "Invert battery sign",
+          "pv_roof": "PV system 1 · Roof KOSTAL instantaneous power (W/kW)",
+          "pv_carport": "PV system 2 · Carport Anker instantaneous power (W/kW)",
+          "grid_import": "Smart meter · Grid import power (W/kW; NOT kWh)",
+          "grid_export": "Smart meter · Grid export power (W/kW; NOT kWh)"
         }
       }
     },
     "error": {
-      "same_source": "A sensor cannot be mapped to multiple roles"
+      "same_source": "A sensor cannot be mapped to multiple roles",
+      "pv_required": "Select at least one PV source",
+      "pv_conflict": "Select either PV total OR individually mapped PV systems",
+      "grid_required": "Select signed grid power OR both separate import and export power",
+      "grid_conflict": "Do not mix signed grid power with separate import/export channels"
     },
     "abort": {
       "already_configured": "EnergyOS is already configured"
@@ -28,16 +36,27 @@
       "init": {
         "title": "EnergyOS mapping",
         "data": {
-          "pv": "PV power",
-          "grid": "Grid power",
+          "pv": "Single PV total power (alternative; do not select together with both PVs)",
+          "grid": "Signed grid power (alternative: positive import, negative export)",
           "battery": "Battery power",
           "soc": "Battery SOC",
-          "load": "House load",
+          "load": "Optional independently measured house load (do not use estimates)",
           "ev": "EV charging power",
           "invert_grid": "Invert grid sign",
-          "invert_battery": "Invert battery sign"
+          "invert_battery": "Invert battery sign",
+          "pv_roof": "PV system 1 · Roof KOSTAL instantaneous power (W/kW)",
+          "pv_carport": "PV system 2 · Carport Anker instantaneous power (W/kW)",
+          "grid_import": "Smart meter · Grid import power (W/kW; NOT kWh)",
+          "grid_export": "Smart meter · Grid export power (W/kW; NOT kWh)"
         }
       }
+    },
+    "error": {
+      "same_source": "A sensor cannot be mapped to multiple roles",
+      "pv_required": "Select at least one PV source",
+      "pv_conflict": "Select either PV total OR individually mapped PV systems",
+      "grid_required": "Select signed grid power OR both separate import and export power",
+      "grid_conflict": "Do not mix signed grid power with separate import/export channels"
     }
   }
 }
