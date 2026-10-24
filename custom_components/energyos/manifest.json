@@ -1,7 +1,7 @@
 {
   "domain": "energyos",
   "name": "EnergyOS",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "codeowners": [],
   "config_flow": true,
   "integration_type": "helper",
