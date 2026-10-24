@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "EnergyOS sensor setup",
+        "description": "Verify detected source sensors before saving. Suggested roles: {autodetected}",
+        "data": {
+          "pv": "PV power",
+          "grid": "Grid signed power",
+          "battery": "Battery signed power",
+          "soc": "Battery state of charge",
+          "load": "House load",
+          "ev": "EV charging power",
+          "invert_grid": "Invert grid sign",
+          "invert_battery": "Invert battery sign"
+        }
+      }
+    },
+    "error": {
+      "same_source": "A sensor cannot be mapped to multiple roles"
+    },
+    "abort": {
+      "already_configured": "EnergyOS is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "EnergyOS mapping",
+        "data": {
+          "pv": "PV power",
+          "grid": "Grid power",
+          "battery": "Battery power",
+          "soc": "Battery SOC",
+          "load": "House load",
+          "ev": "EV charging power",
+          "invert_grid": "Invert grid sign",
+          "invert_battery": "Invert battery sign"
+        }
+      }
+    }
+  }
+}
