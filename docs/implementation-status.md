@@ -1,4 +1,4 @@
-# Implementation status · v0.3.0 alpha
+# Implementation status · v0.3.1 alpha
 
 | Capability | State |
 |---|---|
@@ -16,3 +16,6 @@
 | HACS release and installation check | NOT tested |
 
 See specs and ADRs for intended future scope. **Do not use advisory numbers for autonomous charging yet.**
+
+## Multi-PV setup update
+Dual PV sources and split smart-meter instantaneous import/export W values are supported at the config and sensor composition layers. Unavailable source sensor blocks total rather than silently reporting a partial measurement. Home Assistant runtime integration testing still pending.

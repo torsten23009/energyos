@@ -29,9 +29,10 @@ def optimize(snapshot, *, reserve_w=250, charger_min_w=1400, charger_max_w=3600,
 
 def diagnose_mapping(mapping, snapshot, candidates=None):
     advice = []
-    for role in ("pv", "grid"):
-        if not mapping.get(role):
-            advice.append(f"Assign a valid {role} sensor")
+    if not (mapping.get("pv") or mapping.get("pv_roof") or mapping.get("pv_carport")):
+        advice.append("Assign a valid PV power sensor")
+    if not (mapping.get("grid") or (mapping.get("grid_import") and mapping.get("grid_export"))):
+        advice.append("Assign signed grid power or both import/export power sensors")
     for reason in snapshot.get("reasons", ()):
         if reason.endswith(":stale"):
             advice.append(f"Investigate source freshness: {reason}")

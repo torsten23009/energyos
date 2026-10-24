@@ -1,13 +1,15 @@
-"""HA DataUpdateCoordinator. Source entities stay read-only."""
+"""Read HAOS telemetry, compose multi-PV and split meter sources; no device writes."""
 from datetime import timedelta
 import logging
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.util import dt as dt_util
 from .const import DOMAIN, DEFAULT_SCAN_INTERVAL
 from .engine import Reading, normalized, evaluate
+from .topology import compose
 from .advisor import optimize, diagnose_mapping
 
 _LOGGER = logging.getLogger(__name__)
+ROLES = ("pv", "pv_roof", "pv_carport", "grid", "grid_import", "grid_export", "battery", "soc", "load", "ev")
 
 class EnergyOSCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, entry):
@@ -17,21 +19,36 @@ class EnergyOSCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         conf = {**self.entry.data, **self.entry.options}
-        values = {}
-        for key in ("pv", "grid", "battery", "soc", "load", "ev"):
-            entity_id = conf.get(key)
-            state = self.hass.states.get(entity_id) if entity_id else None
-            reading = Reading(None, None)
+        readings = {}
+        for role in ROLES:
+            state = self.hass.states.get(conf[role]) if conf.get(role) else None
+            val, timestamp = None, None
             if state and state.state not in ("unknown", "unavailable", "none", ""):
-                kind = "soc" if key == "soc" else "power"
-                val = normalized(state.state, state.attributes.get("unit_of_measurement"), kind,
-                    invert=(key == "grid" and conf.get("invert_grid", False)) or
-                           (key == "battery" and conf.get("invert_battery", False)))
-                observed = getattr(state, "last_reported", None) or state.last_updated
-                if val is not None:
-                    reading = Reading(val, observed)
-            values[key] = reading
-        result = evaluate(values, now=dt_util.utcnow())
-        result["optimizer"] = optimize(result, now=dt_util.utcnow())
+                val = normalized(
+                    state.state, state.attributes.get("unit_of_measurement"),
+                    "soc" if role == "soc" else "power",
+                    invert=(role == "grid" and conf.get("invert_grid", False)) or
+                           (role == "battery" and conf.get("invert_battery", False)))
+                timestamp = getattr(state, "last_reported", None) or state.last_updated
+            readings[role] = Reading(val, timestamp if val is not None else None)
+        now = dt_util.utcnow()
+        composed = compose(readings, conf)
+        result = evaluate(composed, now=now)
+        extra = []
+        for role in ("pv_roof", "pv_carport", "grid_import", "grid_export"):
+            if not conf.get(role):
+                continue
+            v = readings[role]
+            if v.watts is None or v.observed_at is None:
+                extra.append(role + ":missing")
+            elif (now-v.observed_at).total_seconds() > 90:
+                extra.append(role + ":stale")
+        if extra:
+            result["reasons"] = tuple(result["reasons"]) + tuple(extra)
+            result["quality"] = max(0, result["quality"] - 20*len(extra))
+            result["safe_to_optimize"] = False
+        for role in ("pv_roof", "pv_carport"):
+            result["metrics"][role] = readings[role].watts
+        result["optimizer"] = optimize(result, now=now)
         result["advice"] = diagnose_mapping(conf, result)
         return result

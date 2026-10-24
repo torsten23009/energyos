@@ -7,7 +7,9 @@ views:
       - type: entities
         title: EnergyOS Live
         entities:
-          - sensor.energyos_pv_power
+          - sensor.energyos_pv_total_power
+          - sensor.energyos_roof_pv_power
+          - sensor.energyos_carport_pv_power
           - sensor.energyos_grid_signed
           - sensor.energyos_battery_signed
           - sensor.energyos_battery_soc
@@ -48,7 +50,7 @@ views:
         title: Power history
         hours_to_show: 24
         entities:
-          - sensor.energyos_pv_power
+          - sensor.energyos_pv_total_power
           - sensor.energyos_grid_signed
   - title: Control Center
     path: control

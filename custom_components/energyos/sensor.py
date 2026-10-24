@@ -4,7 +4,9 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN
 
 SENSORS = {
-    "pv_power": ("PV Power", "pv", "W", SensorDeviceClass.POWER),
+    "pv_power": ("PV Total Power", "pv", "W", SensorDeviceClass.POWER),
+    "roof_power": ("Roof PV Power", "pv_roof", "W", SensorDeviceClass.POWER),
+    "carport_power": ("Carport PV Power", "pv_carport", "W", SensorDeviceClass.POWER),
     "grid_signed": ("Grid Signed", "grid", "W", SensorDeviceClass.POWER),
     "battery_signed": ("Battery Signed", "battery", "W", SensorDeviceClass.POWER),
     "house_load": ("Measured House Load", "load", "W", SensorDeviceClass.POWER),
