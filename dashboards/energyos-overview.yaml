@@ -1,0 +1,58 @@
+title: EnergyOS
+views:
+  - title: Overview
+    path: overview
+    icon: mdi:solar-power
+    cards:
+      - type: entities
+        title: EnergyOS Live
+        entities:
+          - sensor.energyos_pv_power
+          - sensor.energyos_grid_signed
+          - sensor.energyos_battery_signed
+          - sensor.energyos_battery_soc
+          - sensor.energyos_ev_charge_power
+      - type: entities
+        title: Health and recommendations
+        entities:
+          - sensor.energyos_data_quality_score
+          - binary_sensor.energyos_data_healthy
+          - sensor.energyos_ev_suggested_charge_power
+          - sensor.energyos_optimizer_advice
+  - title: Planner
+    path: planner
+    icon: mdi:calendar-clock
+    cards:
+      - type: entities
+        title: Read-only live planner (not a forecast)
+        entities:
+          - sensor.energyos_surplus_reserve_adjusted
+          - sensor.energyos_ev_suggested_charge_power
+          - sensor.energyos_optimizer_advice
+  - title: System Health
+    path: health
+    icon: mdi:heart-pulse
+    cards:
+      - type: entities
+        title: Data integrity
+        entities:
+          - sensor.energyos_data_quality_score
+          - sensor.energyos_energy_balance_residual
+          - sensor.energyos_data_advice
+          - binary_sensor.energyos_data_healthy
+  - title: Insights
+    path: insights
+    icon: mdi:chart-line
+    cards:
+      - type: history-graph
+        title: Power history
+        hours_to_show: 24
+        entities:
+          - sensor.energyos_pv_power
+          - sensor.energyos_grid_signed
+  - title: Control Center
+    path: control
+    icon: mdi:shield-lock
+    cards:
+      - type: markdown
+        content: "### Observe-only mode\nEnergyOS cannot operate the EVSE, battery or inverter. evcc remains the sole wallbox controller."

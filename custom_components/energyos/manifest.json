@@ -1,0 +1,10 @@
+{
+  "domain": "energyos",
+  "name": "EnergyOS",
+  "version": "0.3.0",
+  "codeowners": [],
+  "config_flow": true,
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "requirements": []
+}
