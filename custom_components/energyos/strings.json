@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "EnergyOS sensor setup",
-        "description": "Verify detected source sensors before saving. Suggested roles: {autodetected}",
+        "description": "Select instantaneous power sensors (W/kW), not cumulative energy counters (kWh). Use PV total or individual PV systems, and signed grid power or both import/export channels.",
         "data": {
           "pv": "Single PV total power (alternative; do not select together with both PVs)",
           "grid": "Signed grid power (alternative: positive import, negative export)",

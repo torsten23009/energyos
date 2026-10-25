@@ -1,7 +1,6 @@
 """Read-only diagnostic and energy sensors."""
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .const import DOMAIN
 
 SENSORS = {
     "pv_power": ("PV Total Power", "pv", "W", SensorDeviceClass.POWER),
@@ -24,7 +23,7 @@ SENSORS = {
 }
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    coordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator = entry.runtime_data
     async_add_entities(
         [EnergyOSMetric(coordinator, entry, key, *spec) for key, spec in SENSORS.items()]
         + [EnergyOSTextMetric(coordinator, entry, "optimizer_advice"), EnergyOSTextMetric(coordinator, entry, "data_advice")]

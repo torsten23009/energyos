@@ -4,21 +4,21 @@ import logging
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.util import dt as dt_util
 from .const import DOMAIN, DEFAULT_SCAN_INTERVAL
+from .configuration import effective_config, ROLES
 from .engine import Reading, normalized, evaluate
 from .topology import compose
 from .advisor import optimize, diagnose_mapping
 
 _LOGGER = logging.getLogger(__name__)
-ROLES = ("pv", "pv_roof", "pv_carport", "grid", "grid_import", "grid_export", "battery", "soc", "load", "ev")
 
 class EnergyOSCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, entry):
-        super().__init__(hass, logger=_LOGGER, name=DOMAIN,
+        super().__init__(hass, logger=_LOGGER, name=DOMAIN, config_entry=entry,
                          update_interval=timedelta(seconds=DEFAULT_SCAN_INTERVAL))
         self.entry = entry
 
     async def _async_update_data(self):
-        conf = {**self.entry.data, **self.entry.options}
+        conf = effective_config(self.entry)
         readings = {}
         for role in ROLES:
             state = self.hass.states.get(conf[role]) if conf.get(role) else None

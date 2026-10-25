@@ -48,3 +48,8 @@ HACS may require a repository release and compatibility review; if unavailable, 
 - No real PIKO MP Plus/Anker/Tesla/evcc or Raspberry Pi 4 runtime validation.
 - Metrics can be inaccurate when PV/grid/battery sensors have differing electrical boundaries or sampling times.
 - Example dashboard is not a custom frontend panel. Device and sensor identities must be confirmed.
+
+## HA runtime regression tests
+
+Version 0.3.2 adds migration from v1 entries, complete source-mapping replacement,
+and real Home Assistant lifecycle tests. See [verification and HAOS acceptance](docs/testing/ha-integration.md).

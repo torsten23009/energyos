@@ -1,9 +1,8 @@
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .const import DOMAIN
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    async_add_entities([EnergyOSHealth(hass.data[DOMAIN][entry.entry_id], entry.entry_id)])
+    async_add_entities([EnergyOSHealth(entry.runtime_data, entry.entry_id)])
 
 class EnergyOSHealth(CoordinatorEntity, BinarySensorEntity):
     _attr_has_entity_name = False
