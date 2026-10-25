@@ -1,10 +1,15 @@
 {
   "domain": "energyos",
   "name": "EnergyOS",
-  "version": "0.3.1",
-  "codeowners": [],
+  "version": "0.3.2",
+  "codeowners": [
+    "@torsten23009"
+  ],
   "config_flow": true,
   "integration_type": "helper",
   "iot_class": "calculated",
-  "requirements": []
+  "requirements": [],
+  "documentation": "https://github.com/torsten23009/energyos",
+  "issue_tracker": "https://github.com/torsten23009/energyos/issues",
+  "single_config_entry": true
 }

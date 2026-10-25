@@ -1,10 +1,11 @@
 """Diagnostics omit raw sensor values and identifiers wherever possible."""
-from .const import DOMAIN
 from .ha_discovery import discover
+from .configuration import effective_config, ROLES
 
 async def async_get_config_entry_diagnostics(hass, entry):
-    data = hass.data[DOMAIN][entry.entry_id].data or {}
+    data = entry.runtime_data.data or {}
     proposed, ranked = discover(hass)
+    conf = effective_config(entry)
     return {
         "quality": data.get("quality"),
         "reasons": list(data.get("reasons", ())),
@@ -13,6 +14,5 @@ async def async_get_config_entry_diagnostics(hass, entry):
         "advice": data.get("advice", []),
         "suggested_roles": list(proposed),
         "candidate_counts": {k: len(v) for k, v in ranked.items()},
-        "configured_roles": sorted(k for k in ("pv", "grid", "battery", "soc", "load", "ev")
-                                   if entry.options.get(k) or entry.data.get(k)),
+        "configured_roles": sorted(k for k in ROLES if conf.get(k)),
     }

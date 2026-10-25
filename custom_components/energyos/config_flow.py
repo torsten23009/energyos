@@ -2,17 +2,18 @@
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import selector
+from homeassistant.core import callback
+from .configuration import effective_config, ROLES
 from .const import DOMAIN
 from .ha_discovery import discover
 
 ENTITY = selector.EntitySelector(selector.EntitySelectorConfig(domain="sensor"))
-ROLES = ("pv_roof", "pv_carport", "pv", "grid", "grid_import", "grid_export", "battery", "soc", "load", "ev")
 
 def mapping_schema(defaults=None):
     defaults = defaults or {}
     fields = {}
     for role in ROLES:
-        marker = vol.Optional(role, default=defaults[role]) if defaults.get(role) else vol.Optional(role)
+        marker = vol.Optional(role, description={"suggested_value": defaults[role]}) if defaults.get(role) else vol.Optional(role)
         fields[marker] = ENTITY
     fields[vol.Optional("invert_grid", default=defaults.get("invert_grid", False))] = bool
     fields[vol.Optional("invert_battery", default=defaults.get("invert_battery", False))] = bool
@@ -52,6 +53,7 @@ class EnergyOSConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(step_id="user", data_schema=mapping_schema(discovered_suggestions(self.hass)))
 
     @staticmethod
+    @callback
     def async_get_options_flow(config_entry):
         return EnergyOSOptionsFlow()
 
@@ -63,5 +65,5 @@ class EnergyOSOptionsFlow(config_entries.OptionsFlow):
                 return self.async_show_form(step_id="init", data_schema=mapping_schema(user_input),
                                             errors={"base": error})
             return self.async_create_entry(title="", data=user_input)
-        defaults = {**discovered_suggestions(self.hass), **self.config_entry.data, **self.config_entry.options}
+        defaults = effective_config(self.config_entry)
         return self.async_show_form(step_id="init", data_schema=mapping_schema(defaults))
